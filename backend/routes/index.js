@@ -2,20 +2,18 @@ var express = require('express');
 var router = express.Router();
 var mongodb = require('mongodb');
 
-
-
 /* GET home page. */
 router.get('/', function(req, res, next) {
     res.render('index', { title: 'Express' });
 });
 
-router.get('/items', function(req, res){
+router.get('/thelist', function(req, res){
 
     // Get a Mongo client to work with the Mongo server
     var MongoClient = mongodb.MongoClient;
 
     // Define where the MongoDB server is
-    var url = 'mongodb://localhost:27018/grocerylist';
+    var url = 'mongodb://localhost:27017/sampsite';
 
     // Connect to the server
     MongoClient.connect(url, function (err, db) {
@@ -26,14 +24,14 @@ router.get('/items', function(req, res){
             console.log('Connection established to', url);
 
             // Get the documents collection
-            var collection = db.collection('grocerylist');
-            console.log(db);
+            var collection = db.collection('students');
 
+            // Find all students
             collection.find({}).toArray(function (err, result) {
                 if (err) {
                     res.send(err);
                 } else if (result.length) {
-                    res.render(result);
+                    res.send(result)
                 } else {
                     res.send('No documents found');
                 }
@@ -43,5 +41,4 @@ router.get('/items', function(req, res){
         }
     });
 });
-
 module.exports = router;

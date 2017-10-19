@@ -1,0 +1,10 @@
+extends layout
+
+block content
+    h3.
+        grocerylist
+    ul
+        each item, i in grocerylist
+            li#grocery_list_item
+                a(href="#") #{item.item} is
+                #{item.checked}

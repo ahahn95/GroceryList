@@ -32,9 +32,13 @@ router.get('/list', function(req, res){
                 if (err) {
                     res.send(err);
                 } else if (result.length) {
+
+                    //TODO sort out headers
                     res.header("Access-Control-Allow-Headers", "Authorization, Origin, X-Requested-With, Content-Type, Accept");
-                    res.header("Access-Control-Allow-Methods", "POST, GET, DELETE");
+                    res.header("Access-Control-Allow-Methods", "PATCH, POST, GET, PUT, DELETE, OPTIONS");
                     res.header("Access-Control-Allow-Credentials", "true");
+                    res.header("Content-Type", "application/json");
+                    res.header("Accept","application/json");
                     res.send(result)
                 } else {
                     res.send('No documents found');
@@ -44,10 +48,6 @@ router.get('/list', function(req, res){
             });
         }
     });
-});
-
-router.get('/new', function(req, res){
-    res.render('newstudent', {title: 'Add Student' });
 });
 
 module.exports = router;

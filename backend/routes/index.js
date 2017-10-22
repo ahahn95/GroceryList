@@ -1,53 +1,48 @@
 var express = require('express');
 var router = express.Router();
-var mongodb = require('mongodb');
+var mongoose = require('mongoose');
 
+mongoose.connect('localhost:27017/grocerylist');
 
-/* GET home page. */
-router.get('/', function(req, res, next) {
-    res.render('index', { title: 'Express' });
+var Schema = mongoose.Schema;
+var itemSchema = new Schema({
+    //_id: {type: String, required: true},
+    name: {type: String, required: true},
+    checked: {type: String, required: true},
+}, {collection: 'list'})
+
+var item = mongoose.model('list', itemSchema);
+
+router.get('/', function(req, res) {
+    res.send("API root directory")
 });
 
-router.get('/list', function(req, res){
+router.get('/list', function(req, res) {
+    item.find()
+        .then(function(response) {
+            res.send(response)
+        })
+})
 
-    // Get a Mongo client to work with the Mongo server
-    var MongoClient = mongodb.MongoClient;
-
-    // Define where the MongoDB server is
-    var url = 'mongodb://localhost:27017/grocerylist';
-
-    // Connect to the server
-    MongoClient.connect(url, function (err, db) {
-        if (err) {
-            console.log('Unable to connect to the Server', err);
+router.post('/list', function(req,res) {
+    item.create(req.body,function(err,item) {
+        if(err) {
+            res.send("Error saving item");
         } else {
-            // We are connected
-            console.log('Connection established to', url);
-
-            // Get the documents collection
-            var collection = db.collection('list');
-
-            // Find all students
-            collection.find({}).toArray(function (err, result) {
-                if (err) {
-                    res.send(err);
-                } else if (result.length) {
-
-                    //TODO sort out headers
-                    res.header("Access-Control-Allow-Headers", "Authorization, Origin, X-Requested-With, Content-Type, Accept");
-                    res.header("Access-Control-Allow-Methods", "PATCH, POST, GET, PUT, DELETE, OPTIONS");
-                    res.header("Access-Control-Allow-Credentials", "true");
-                    res.header("Content-Type", "application/json");
-                    res.header("Accept","application/json");
-                    res.send(result)
-                } else {
-                    res.send('No documents found');
-                }
-                //Close connection
-                db.close();
-            });
+            console.log(item);
+            res.send(item);
         }
-    });
-});
+    })
+})
+
+router.delete('/list/:id',function(req,res) {
+    item.remove({
+        _id: req.params.id
+    }, function(err) {
+        if(err) {
+            return res.send(err);
+        }
+    })
+})
 
 module.exports = router;

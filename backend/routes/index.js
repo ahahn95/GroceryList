@@ -21,6 +21,10 @@ router.route('/list')
     .get(function(req, res) {
     item.find()
         .then(function(response) {
+            res.header("Access-Control-Allow-Headers", "Authorization, Origin, X-Requested-With, Content-Type, Accept");
+            res.header("Access-Control-Allow-Methods", "PATCH, POST, GET, PUT, DELETE, OPTIONS");
+            res.header("Access-Control-Allow-Methods", "POST, GET, DELETE");
+            res.header("Access-Control-Allow-Credentials", "true");
             res.send(response)
         })
     })
@@ -28,6 +32,10 @@ router.route('/list')
     .post(function(req,res) {
         item.create(req.body,function(err,item) {
             if(err) {
+                res.header("Access-Control-Allow-Headers", "Authorization, Origin, X-Requested-With, Content-Type, Accept");
+                res.header("Access-Control-Allow-Methods", "PATCH, POST, GET, PUT, DELETE, OPTIONS");
+                res.header("Access-Control-Allow-Methods", "POST, GET, DELETE");
+                res.header("Access-Control-Allow-Credentials", "true");
                 res.send("Error saving item");
             } else {
                 console.log(item);
@@ -36,12 +44,16 @@ router.route('/list')
         })
     })
 
-router.delete('/list/:id', function(req,res) {
+router.delete('/list' +'/:id', function(req,res) {
         console.log(req.params);
         item.remove({
             _id: req.params.id
         }, function(err) {
             if(err) {
+                res.header("Access-Control-Allow-Headers", "Authorization, Origin, X-Requested-With, Content-Type, Accept");
+                res.header("Access-Control-Allow-Methods", "PATCH, POST, GET, PUT, DELETE, OPTIONS");
+                res.header("Access-Control-Allow-Methods", "POST, GET, DELETE");
+                res.header("Access-Control-Allow-Credentials", "true");
                 return res.send(err);
             } else {
                 console.log("sucess")

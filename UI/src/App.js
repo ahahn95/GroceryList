@@ -4,7 +4,6 @@ import  InputBox  from "./Components/InputBox";
 import  List  from "./Components/List";
 import  Button  from "./Components/Button";
 
-
 //TODO Is refs the best way to be doing things?
 class App extends Component {
     constructor(props) {
@@ -14,22 +13,27 @@ class App extends Component {
         }
         this.handleClick = this.handleClick.bind(this);
         this.handleRemove = this.handleRemove.bind(this);
+        this.getList = this.getList.bind(this);
+    }
+
+    getList() {
+        fetch('http://localhost:3001/list/', {
+            headers: {
+                "Access-Control-Allow-Credentials": true,
+                "Access-Control-Allow-Origin": "*",
+                "Content-Type": "application/json"
+            }
+        })
+            .then(response => response.json())
+            .then(response => {
+                this.setState({
+                    items: response
+                });
+            });
     }
 
     componentWillMount() {
-        fetch('http://localhost:3001/list/', {
-        headers: {
-            "Access-Control-Allow-Credentials": true,
-            "Access-Control-Allow-Origin": "*",
-            "Content-Type": "application/json"
-        }
-    })
-        .then(response => response.json())
-        .then(response => {
-            this.setState({
-                items: response
-            });
-        });
+        this.getList();
     }
 
     handleClick() {
@@ -44,19 +48,7 @@ class App extends Component {
                 "name": this.refs.box.refs.box.value,
                 "checked": "false"
             })
-        }).then(fetch('http://localhost:3001/list/', {
-            headers: {
-                "Access-Control-Allow-Credentials": true,
-                "Access-Control-Allow-Origin": "*",
-                "Content-Type": "application/json"
-            }
-        })
-            .then(response => response.json())
-            .then(response => {
-                this.setState({
-                    items: response
-                });
-            }))
+        }).then(this.getList);
     }
 
     handleRemove(e) {
@@ -67,9 +59,8 @@ class App extends Component {
                 "Content-Type": "application/json"
             },
             method: "DELETE",
-            body: e,
+            body: e
         })
-
         this.refs.list.forceUpdate();
     }
 

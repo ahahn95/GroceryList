@@ -2,7 +2,7 @@
 
 How to start (macOS Instructions):
 
-1. Enter into terminal: ```alias startMongo='mongod --dbpath``` PATH_TO_DIRECTORY/Grocery_List/backend/data'``
+1. Enter into terminal: ```alias startMongo='mongod --dbpath PATH_TO_DIRECTORY/Grocery_List/backend/data'```
 2. To start database, enter ```startMongo``` into terminal
 3. To start UI, ```cd``` into UI folder and type ```npm install && npm start```
 4. To start backend, `cd` into backend folder and type ```npm install && npm start```
